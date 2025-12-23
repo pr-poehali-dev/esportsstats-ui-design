@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -26,14 +27,18 @@ type Player = {
 };
 
 const mockPlayers: Player[] = [
-  { id: 1, name: 'ShadowKing', team: 'Team Liquid', region: 'EU', game: 'Dota 2', kda: 4.8, winrate: 68, rating: 9850, kills: 892, deaths: 186, assists: 1024, gpm: 645, trend: 'up', rankChange: 2 },
-  { id: 2, name: 'PhoenixRise', team: 'OG Esports', region: 'EU', game: 'Dota 2', kda: 4.5, winrate: 65, rating: 9720, kills: 856, deaths: 190, assists: 998, gpm: 632, trend: 'stable', rankChange: 0 },
-  { id: 3, name: 'ThunderStrike', team: 'Team Spirit', region: 'CIS', game: 'CS2', kda: 4.3, winrate: 63, rating: 9580, kills: 834, deaths: 194, assists: 945, gpm: 618, trend: 'up', rankChange: 1 },
-  { id: 4, name: 'IceBreaker', team: 'Evil Geniuses', region: 'NA', game: 'CS2', kda: 4.1, winrate: 61, rating: 9420, kills: 812, deaths: 198, assists: 923, gpm: 605, trend: 'down', rankChange: -1 },
-  { id: 5, name: 'DragonSlayer', team: 'PSG.LGD', region: 'CN', game: 'League of Legends', kda: 4.0, winrate: 60, rating: 9280, kills: 798, deaths: 200, assists: 902, gpm: 598, trend: 'up', rankChange: 3 },
-  { id: 6, name: 'NightHunter', team: 'Tundra Esports', region: 'EU', game: 'League of Legends', kda: 3.9, winrate: 59, rating: 9150, kills: 776, deaths: 199, assists: 886, gpm: 587, trend: 'stable', rankChange: 0 },
-  { id: 7, name: 'StormBringer', team: 'Fnatic', region: 'SEA', game: 'Valorant', kda: 3.8, winrate: 58, rating: 9020, kills: 765, deaths: 201, assists: 869, gpm: 574, trend: 'down', rankChange: -2 },
-  { id: 8, name: 'BladeRunner', team: 'T1', region: 'SEA', game: 'Valorant', kda: 3.7, winrate: 57, rating: 8890, kills: 748, deaths: 202, assists: 856, gpm: 562, trend: 'up', rankChange: 1 },
+  { id: 1, name: 'Yatoro', team: 'Team Spirit', region: 'CIS', game: 'Dota 2', kda: 4.8, winrate: 68, rating: 9850, kills: 892, deaths: 186, assists: 1024, gpm: 645, trend: 'up', rankChange: 2 },
+  { id: 2, name: 'TopsoN', team: 'OG Esports', region: 'EU', game: 'Dota 2', kda: 4.5, winrate: 65, rating: 9720, kills: 856, deaths: 190, assists: 998, gpm: 632, trend: 'stable', rankChange: 0 },
+  { id: 3, name: 's1mple', team: 'Natus Vincere', region: 'CIS', game: 'CS2', kda: 4.3, winrate: 63, rating: 9580, kills: 834, deaths: 194, assists: 945, gpm: 618, trend: 'up', rankChange: 1 },
+  { id: 4, name: 'ZywOo', team: 'Team Vitality', region: 'EU', game: 'CS2', kda: 4.1, winrate: 61, rating: 9420, kills: 812, deaths: 198, assists: 923, gpm: 605, trend: 'stable', rankChange: 0 },
+  { id: 5, name: 'Faker', team: 'T1', region: 'KR', game: 'League of Legends', kda: 4.0, winrate: 60, rating: 9280, kills: 798, deaths: 200, assists: 902, gpm: 598, trend: 'up', rankChange: 3 },
+  { id: 6, name: 'Caps', team: 'G2 Esports', region: 'EU', game: 'League of Legends', kda: 3.9, winrate: 59, rating: 9150, kills: 776, deaths: 199, assists: 886, gpm: 587, trend: 'stable', rankChange: 0 },
+  { id: 7, name: 'TenZ', team: 'Sentinels', region: 'NA', game: 'Valorant', kda: 3.8, winrate: 58, rating: 9020, kills: 765, deaths: 201, assists: 869, gpm: 574, trend: 'down', rankChange: -2 },
+  { id: 8, name: 'aspas', team: 'Leviatán', region: 'SA', game: 'Valorant', kda: 3.7, winrate: 57, rating: 8890, kills: 748, deaths: 202, assists: 856, gpm: 562, trend: 'up', rankChange: 1 },
+  { id: 9, name: 'Miracle-', team: 'Nigma Galaxy', region: 'EU', game: 'Dota 2', kda: 4.4, winrate: 64, rating: 9650, kills: 878, deaths: 189, assists: 1012, gpm: 638, trend: 'up', rankChange: 1 },
+  { id: 10, name: 'NiKo', team: 'G2 Esports', region: 'EU', game: 'CS2', kda: 4.2, winrate: 62, rating: 9500, kills: 824, deaths: 195, assists: 936, gpm: 612, trend: 'stable', rankChange: 0 },
+  { id: 11, name: 'Chovy', team: 'Gen.G', region: 'KR', game: 'League of Legends', kda: 3.9, winrate: 61, rating: 9320, kills: 786, deaths: 197, assists: 894, gpm: 602, trend: 'up', rankChange: 2 },
+  { id: 12, name: 'Derke', team: 'Fnatic', region: 'EU', game: 'Valorant', kda: 3.6, winrate: 56, rating: 8950, kills: 752, deaths: 204, assists: 862, gpm: 568, trend: 'down', rankChange: -1 },
 ];
 
 const Index = () => {
@@ -41,11 +46,15 @@ const Index = () => {
   const [selectedMetric, setSelectedMetric] = useState<'rating' | 'kda' | 'winrate'>('rating');
   const [selectedGame, setSelectedGame] = useState<string>('all');
   const [selectedRegion, setSelectedRegion] = useState<string>('all');
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   const filteredPlayers = mockPlayers.filter(player => {
     const gameMatch = selectedGame === 'all' || player.game === selectedGame;
     const regionMatch = selectedRegion === 'all' || player.region === selectedRegion;
-    return gameMatch && regionMatch;
+    const searchMatch = searchQuery === '' || 
+      player.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      player.team.toLowerCase().includes(searchQuery.toLowerCase());
+    return gameMatch && regionMatch && searchMatch;
   });
 
   const sortedPlayers = [...filteredPlayers].sort((a, b) => {
@@ -101,7 +110,7 @@ const Index = () => {
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Всего игроков</p>
-                  <p className="text-2xl font-bold">12,458</p>
+                  <p className="text-2xl font-bold">{mockPlayers.length}</p>
                 </div>
               </div>
               <div className="flex items-center gap-4">
@@ -130,8 +139,29 @@ const Index = () => {
           <Card className="p-6 bg-card border-border">
             <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
               <Icon name="Filter" size={20} className="text-primary" />
-              Фильтры
+              Фильтры и поиск
             </h2>
+            <div className="mb-4">
+              <label className="text-sm text-muted-foreground mb-2 block">Поиск по имени или команде</label>
+              <div className="relative">
+                <Icon name="Search" size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  type="text"
+                  placeholder="Введите имя игрока или команды..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery('')}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  >
+                    <Icon name="X" size={18} />
+                  </button>
+                )}
+              </div>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="text-sm text-muted-foreground mb-2 block">Игра</label>
@@ -170,7 +200,7 @@ const Index = () => {
                 </Select>
               </div>
             </div>
-            {(selectedGame !== 'all' || selectedRegion !== 'all') && (
+            {(selectedGame !== 'all' || selectedRegion !== 'all' || searchQuery !== '') && (
               <div className="mt-4 flex items-center gap-2">
                 <Badge variant="secondary" className="text-sm">
                   Найдено игроков: {filteredPlayers.length}
@@ -181,11 +211,12 @@ const Index = () => {
                   onClick={() => {
                     setSelectedGame('all');
                     setSelectedRegion('all');
+                    setSearchQuery('');
                   }}
                   className="text-xs"
                 >
                   <Icon name="X" size={14} className="mr-1" />
-                  Сбросить фильтры
+                  Сбросить всё
                 </Button>
               </div>
             )}
@@ -218,10 +249,11 @@ const Index = () => {
                   onClick={() => {
                     setSelectedGame('all');
                     setSelectedRegion('all');
+                    setSearchQuery('');
                   }}
                   variant="outline"
                 >
-                  Сбросить фильтры
+                  Сбросить всё
                 </Button>
               </Card>
             ) : (
