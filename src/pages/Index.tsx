@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -33,6 +34,7 @@ const mockPlayers: Player[] = [
 ];
 
 const Index = () => {
+  const navigate = useNavigate();
   const [selectedMetric, setSelectedMetric] = useState<'rating' | 'kda' | 'winrate'>('rating');
 
   const sortedPlayers = [...mockPlayers].sort((a, b) => {
@@ -122,6 +124,7 @@ const Index = () => {
               {sortedPlayers.map((player, index) => (
                 <Card 
                   key={player.id} 
+                  onClick={() => navigate(`/player/${player.id}`)}
                   className="p-6 bg-card border-border hover:border-primary/50 transition-all duration-300 hover-scale cursor-pointer animate-scale-in"
                   style={{ animationDelay: `${index * 0.05}s` }}
                 >
