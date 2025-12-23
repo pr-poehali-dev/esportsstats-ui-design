@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import Icon from '@/components/ui/icon';
 
 type Player = {
@@ -12,6 +13,7 @@ type Player = {
   name: string;
   team: string;
   region: string;
+  game: string;
   kda: number;
   winrate: number;
   rating: number;
@@ -24,25 +26,36 @@ type Player = {
 };
 
 const mockPlayers: Player[] = [
-  { id: 1, name: 'ShadowKing', team: 'Team Liquid', region: 'EU', kda: 4.8, winrate: 68, rating: 9850, kills: 892, deaths: 186, assists: 1024, gpm: 645, trend: 'up', rankChange: 2 },
-  { id: 2, name: 'PhoenixRise', team: 'OG Esports', region: 'EU', kda: 4.5, winrate: 65, rating: 9720, kills: 856, deaths: 190, assists: 998, gpm: 632, trend: 'stable', rankChange: 0 },
-  { id: 3, name: 'ThunderStrike', team: 'Team Spirit', region: 'CIS', kda: 4.3, winrate: 63, rating: 9580, kills: 834, deaths: 194, assists: 945, gpm: 618, trend: 'up', rankChange: 1 },
-  { id: 4, name: 'IceBreaker', team: 'Evil Geniuses', region: 'NA', kda: 4.1, winrate: 61, rating: 9420, kills: 812, deaths: 198, assists: 923, gpm: 605, trend: 'down', rankChange: -1 },
-  { id: 5, name: 'DragonSlayer', team: 'PSG.LGD', region: 'CN', kda: 4.0, winrate: 60, rating: 9280, kills: 798, deaths: 200, assists: 902, gpm: 598, trend: 'up', rankChange: 3 },
-  { id: 6, name: 'NightHunter', team: 'Tundra Esports', region: 'EU', kda: 3.9, winrate: 59, rating: 9150, kills: 776, deaths: 199, assists: 886, gpm: 587, trend: 'stable', rankChange: 0 },
-  { id: 7, name: 'StormBringer', team: 'Fnatic', region: 'SEA', kda: 3.8, winrate: 58, rating: 9020, kills: 765, deaths: 201, assists: 869, gpm: 574, trend: 'down', rankChange: -2 },
-  { id: 8, name: 'BladeRunner', team: 'T1', region: 'SEA', kda: 3.7, winrate: 57, rating: 8890, kills: 748, deaths: 202, assists: 856, gpm: 562, trend: 'up', rankChange: 1 },
+  { id: 1, name: 'ShadowKing', team: 'Team Liquid', region: 'EU', game: 'Dota 2', kda: 4.8, winrate: 68, rating: 9850, kills: 892, deaths: 186, assists: 1024, gpm: 645, trend: 'up', rankChange: 2 },
+  { id: 2, name: 'PhoenixRise', team: 'OG Esports', region: 'EU', game: 'Dota 2', kda: 4.5, winrate: 65, rating: 9720, kills: 856, deaths: 190, assists: 998, gpm: 632, trend: 'stable', rankChange: 0 },
+  { id: 3, name: 'ThunderStrike', team: 'Team Spirit', region: 'CIS', game: 'CS2', kda: 4.3, winrate: 63, rating: 9580, kills: 834, deaths: 194, assists: 945, gpm: 618, trend: 'up', rankChange: 1 },
+  { id: 4, name: 'IceBreaker', team: 'Evil Geniuses', region: 'NA', game: 'CS2', kda: 4.1, winrate: 61, rating: 9420, kills: 812, deaths: 198, assists: 923, gpm: 605, trend: 'down', rankChange: -1 },
+  { id: 5, name: 'DragonSlayer', team: 'PSG.LGD', region: 'CN', game: 'League of Legends', kda: 4.0, winrate: 60, rating: 9280, kills: 798, deaths: 200, assists: 902, gpm: 598, trend: 'up', rankChange: 3 },
+  { id: 6, name: 'NightHunter', team: 'Tundra Esports', region: 'EU', game: 'League of Legends', kda: 3.9, winrate: 59, rating: 9150, kills: 776, deaths: 199, assists: 886, gpm: 587, trend: 'stable', rankChange: 0 },
+  { id: 7, name: 'StormBringer', team: 'Fnatic', region: 'SEA', game: 'Valorant', kda: 3.8, winrate: 58, rating: 9020, kills: 765, deaths: 201, assists: 869, gpm: 574, trend: 'down', rankChange: -2 },
+  { id: 8, name: 'BladeRunner', team: 'T1', region: 'SEA', game: 'Valorant', kda: 3.7, winrate: 57, rating: 8890, kills: 748, deaths: 202, assists: 856, gpm: 562, trend: 'up', rankChange: 1 },
 ];
 
 const Index = () => {
   const navigate = useNavigate();
   const [selectedMetric, setSelectedMetric] = useState<'rating' | 'kda' | 'winrate'>('rating');
+  const [selectedGame, setSelectedGame] = useState<string>('all');
+  const [selectedRegion, setSelectedRegion] = useState<string>('all');
 
-  const sortedPlayers = [...mockPlayers].sort((a, b) => {
+  const filteredPlayers = mockPlayers.filter(player => {
+    const gameMatch = selectedGame === 'all' || player.game === selectedGame;
+    const regionMatch = selectedRegion === 'all' || player.region === selectedRegion;
+    return gameMatch && regionMatch;
+  });
+
+  const sortedPlayers = [...filteredPlayers].sort((a, b) => {
     if (selectedMetric === 'rating') return b.rating - a.rating;
     if (selectedMetric === 'kda') return b.kda - a.kda;
     return b.winrate - a.winrate;
   });
+
+  const games = ['all', ...Array.from(new Set(mockPlayers.map(p => p.game)))];
+  const regions = ['all', ...Array.from(new Set(mockPlayers.map(p => p.region)))];
 
   const getTrendIcon = (trend: string) => {
     if (trend === 'up') return <Icon name="TrendingUp" size={16} className="text-success" />;
@@ -113,7 +126,73 @@ const Index = () => {
           </Card>
         </div>
 
-        <Tabs defaultValue="rating" className="w-full animate-fade-in" style={{ animationDelay: '0.2s' }}>
+        <div className="mb-6 animate-fade-in" style={{ animationDelay: '0.2s' }}>
+          <Card className="p-6 bg-card border-border">
+            <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+              <Icon name="Filter" size={20} className="text-primary" />
+              Фильтры
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm text-muted-foreground mb-2 block">Игра</label>
+                <Select value={selectedGame} onValueChange={setSelectedGame}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">
+                      <span className="flex items-center gap-2">
+                        <Icon name="Gamepad2" size={16} />
+                        Все игры
+                      </span>
+                    </SelectItem>
+                    {games.filter(g => g !== 'all').map(game => (
+                      <SelectItem key={game} value={game}>{game}</SelectItem>
+                    ))}\n                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <label className="text-sm text-muted-foreground mb-2 block">Регион</label>
+                <Select value={selectedRegion} onValueChange={setSelectedRegion}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">
+                      <span className="flex items-center gap-2">
+                        <Icon name="Globe" size={16} />
+                        Все регионы
+                      </span>
+                    </SelectItem>
+                    {regions.filter(r => r !== 'all').map(region => (
+                      <SelectItem key={region} value={region}>{region}</SelectItem>
+                    ))}\n                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            {(selectedGame !== 'all' || selectedRegion !== 'all') && (
+              <div className="mt-4 flex items-center gap-2">
+                <Badge variant="secondary" className="text-sm">
+                  Найдено игроков: {filteredPlayers.length}
+                </Badge>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => {
+                    setSelectedGame('all');
+                    setSelectedRegion('all');
+                  }}
+                  className="text-xs"
+                >
+                  <Icon name="X" size={14} className="mr-1" />
+                  Сбросить фильтры
+                </Button>
+              </div>
+            )}
+          </Card>
+        </div>
+
+        <Tabs defaultValue="rating" className="w-full animate-fade-in" style={{ animationDelay: '0.3s' }}>
           <TabsList className="grid w-full grid-cols-3 mb-8 bg-muted">
             <TabsTrigger value="rating" onClick={() => setSelectedMetric('rating')} className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
               <Icon name="Star" size={18} className="mr-2" />
@@ -130,8 +209,24 @@ const Index = () => {
           </TabsList>
 
           <TabsContent value={selectedMetric} className="space-y-4">
-            <div className="grid gap-4">
-              {sortedPlayers.map((player, index) => (
+            {sortedPlayers.length === 0 ? (
+              <Card className="p-12 bg-card border-border text-center">
+                <Icon name="Search" size={48} className="mx-auto mb-4 text-muted-foreground" />
+                <h3 className="text-xl font-bold mb-2">Игроки не найдены</h3>
+                <p className="text-muted-foreground mb-4">Попробуйте изменить параметры фильтров</p>
+                <Button 
+                  onClick={() => {
+                    setSelectedGame('all');
+                    setSelectedRegion('all');
+                  }}
+                  variant="outline"
+                >
+                  Сбросить фильтры
+                </Button>
+              </Card>
+            ) : (
+              <div className="grid gap-4">
+                {sortedPlayers.map((player, index) => (
                 <Card 
                   key={player.id} 
                   onClick={() => navigate(`/player/${player.id}`)}
@@ -165,6 +260,10 @@ const Index = () => {
                       <div className="flex items-center gap-3 mb-2">
                         <h3 className="text-xl font-bold">{player.name}</h3>
                         {getTrendIcon(player.trend)}
+                        <Badge variant="outline" className="text-xs">
+                          <Icon name="Gamepad2" size={12} className="mr-1" />
+                          {player.game}
+                        </Badge>
                       </div>
                       <div className="flex items-center gap-4 text-sm text-muted-foreground">
                         <span className="flex items-center gap-1">
@@ -220,7 +319,8 @@ const Index = () => {
                   </div>
                 </Card>
               ))}
-            </div>
+              </div>
+            )}
           </TabsContent>
         </Tabs>
       </div>
