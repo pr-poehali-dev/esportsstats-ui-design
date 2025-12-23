@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import Icon from '@/components/ui/icon';
@@ -60,11 +61,20 @@ const Index = () => {
     <div className="min-h-screen bg-background text-foreground">
       <div className="container mx-auto px-4 py-8 max-w-7xl">
         <header className="mb-12 animate-fade-in">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center">
-              <Icon name="Trophy" size={24} className="text-white" />
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center">
+                <Icon name="Trophy" size={24} className="text-white" />
+              </div>
+              <h1 className="text-5xl font-bold text-gradient">EsportsStats</h1>
             </div>
-            <h1 className="text-5xl font-bold text-gradient">EsportsStats</h1>
+            <Button 
+              onClick={() => navigate('/compare')}
+              className="bg-primary hover:bg-primary/90 text-primary-foreground"
+            >
+              <Icon name="GitCompare" size={20} className="mr-2" />
+              Сравнить игроков
+            </Button>
           </div>
           <p className="text-xl text-muted-foreground">Аналитика и рейтинги лучших игроков киберспорта</p>
         </header>
